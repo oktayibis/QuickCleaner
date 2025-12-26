@@ -8,6 +8,15 @@ actor LargeFileScanner {
     
     private init() {}
     
+    /// Collect URLs from enumerator synchronously to avoid Swift 6 async iterator issues
+    private nonisolated func collectURLs(from enumerator: FileManager.DirectoryEnumerator) -> [URL] {
+        var urls: [URL] = []
+        for case let fileURL as URL in enumerator {
+            urls.append(fileURL)
+        }
+        return urls
+    }
+    
     /// Scan a directory for large files
     func scanLargeFiles(
         in directory: String,
@@ -26,7 +35,10 @@ actor LargeFileScanner {
             return []
         }
         
-        for case let fileURL as URL in enumerator {
+        // Collect URLs synchronously to avoid Swift 6 async iterator issues
+        let fileURLs = collectURLs(from: enumerator)
+        
+        for fileURL in fileURLs {
             autoreleasepool {
                 guard let resourceValues = try? fileURL.resourceValues(
                     forKeys: [.fileSizeKey, .isRegularFileKey, .contentModificationDateKey]

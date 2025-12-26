@@ -8,6 +8,15 @@ actor DuplicateScanner {
     
     private init() {}
     
+    /// Collect URLs from enumerator synchronously to avoid Swift 6 async iterator issues
+    private nonisolated func collectURLs(from enumerator: FileManager.DirectoryEnumerator) -> [URL] {
+        var urls: [URL] = []
+        for case let fileURL as URL in enumerator {
+            urls.append(fileURL)
+        }
+        return urls
+    }
+    
     /// Scan a directory for duplicate files
     func scanDuplicates(in directory: String, minSizeMB: UInt64 = 1) async -> [DuplicateGroup] {
         let minSizeBytes = minSizeMB * 1024 * 1024
@@ -24,7 +33,10 @@ actor DuplicateScanner {
             return []
         }
         
-        for case let fileURL as URL in enumerator {
+        // Collect URLs synchronously to avoid Swift 6 async iterator issues
+        let fileURLs = collectURLs(from: enumerator)
+        
+        for fileURL in fileURLs {
             // Use autoreleasepool but avoid using 'continue' inside the closure
             var include = false
             var fileSizeValue: Int? = nil
@@ -99,7 +111,10 @@ actor DuplicateScanner {
                     options: [.skipsHiddenFiles, .skipsPackageDescendants]
                   ) else { continue }
             
-            for case let fileURL as URL in enumerator {
+            // Collect URLs synchronously to avoid Swift 6 async iterator issues
+            let fileURLs = collectURLs(from: enumerator)
+            
+            for fileURL in fileURLs {
                 var include = false
                 var fileSizeValue: Int? = nil
                 autoreleasepool {
@@ -148,4 +163,3 @@ actor DuplicateScanner {
         return duplicates.reduce(0) { $0 + $1.totalWasted }
     }
 }
-
