@@ -18,6 +18,7 @@
 </p>
 
 ---
+<img width="1012" height="764" alt="image" src="https://github.com/user-attachments/assets/f091fbcf-374d-4b7a-983c-95388643642e" />
 
 ## Features
 
