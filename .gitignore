@@ -1,0 +1,49 @@
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+DerivedData/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+Packages/
+
+# Build outputs
+dist/
+*.dmg
+*.app
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.DocumentRevisions-V100
+.fseventsd
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+.vscode/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Icon exports folder (keep in project but exclude from git if desired)
+# icons/
